@@ -10,7 +10,7 @@ namespace auth
 {
     class Program
     {
-        static int Main(string[] args)
+        static int Main()
         {
 
             var username = Environment.GetEnvironmentVariable("username");
@@ -46,17 +46,11 @@ namespace auth
 
                     authPacket.SetAttribute(new RadiusAttribute(RadiusAttributeType.NAS_PORT_TYPE, BitConverter.GetBytes((int)NasPortType.ASYNC)));
 
-                    for (int i = 0; i < server.retries; i++)
-                        try
-                        {
-                            var receivedPacket = rc.SendAndReceivePacket(authPacket).Result;
+                    var receivedPacket = rc.SendAndReceivePacket(authPacket, server.retries).Result;
 
-                            if (receivedPacket != null && receivedPacket.PacketType == RadiusCode.ACCESS_ACCEPT)
-                                state.Stop();
-                            
-                        } 
-                        catch { }
-                    
+                    if (receivedPacket != null && receivedPacket.PacketType == RadiusCode.ACCESS_ACCEPT)
+                         state.Stop();
+                                    
             });
 
             if (res.IsCompleted) 
