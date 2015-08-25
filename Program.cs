@@ -55,7 +55,7 @@ namespace auth
 
             if (res.IsCompleted) 
             { 
-                Console.WriteLine("Auth failed");
+                Console.WriteLine("Auth failed for: '{0}'", username);
                 return 1;
             }
             else 

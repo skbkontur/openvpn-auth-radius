@@ -67,7 +67,7 @@
   <PropertyGroup>
     <OutputAssembly>$(OutputPath)\$(AssemblyName).exe</OutputAssembly>
     <Merger Condition="('$(OS)' == 'Windows_NT')">&quot;$(SolutionDir)\packages\ILRepack.2.0.4\tools\ILRepack.exe&quot;</Merger>
-    <Merger Condition="('$(OS)' != 'Windows_NT')">mono --runtime=v4.0.30319 &quot;$(SolutionDir)\packages\ILRepack.1.26.0\tools\ILRepack.exe&quot;</Merger>
+    <Merger Condition="('$(OS)' != 'Windows_NT')">mono --runtime=v4.0.30319 &quot;$(SolutionDir)\packages\ILRepack.2.0.4\tools\ILRepack.exe&quot;</Merger>
   </PropertyGroup>
   <Message Text="MERGING: @(MergeAssemblies->'%(Filename)') into $(OutputAssembly)" Importance="High" />
   <Exec Command="$(Merger) /out:&quot;$(OutputAssembly)&quot; @(MergeAssemblies->'&quot;%(FullPath)&quot;', ' ')" />
