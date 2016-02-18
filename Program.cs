@@ -39,18 +39,21 @@ namespace auth
                     // Console.WriteLine("server.name = {0}, sharedsecret={1}, retries={2}, wait={3}, authport={4}", server.Name, server.sharedsecret, server.retries, server.wait, server.authport);
 
                     var rc = new RadiusClient(server.Name, server.sharedsecret, server.wait * 1000, server.authport);
-                    var authPacket = rc.Authenticate(username, password);
+                    try
+                    {
+                        var authPacket = rc.Authenticate(username, password);
+                        if (Config.Settings.NAS_IDENTIFIER != null)
+                            authPacket.SetAttribute(new RadiusAttribute(RadiusAttributeType.NAS_IDENTIFIER, Encoding.ASCII.GetBytes(Config.Settings.NAS_IDENTIFIER)));
 
-                    if (Config.Settings.NAS_IDENTIFIER != null)
-                        authPacket.SetAttribute(new RadiusAttribute(RadiusAttributeType.NAS_IDENTIFIER, Encoding.ASCII.GetBytes(Config.Settings.NAS_IDENTIFIER)));
+                        authPacket.SetAttribute(new RadiusAttribute(RadiusAttributeType.NAS_PORT_TYPE, BitConverter.GetBytes((int)NasPortType.ASYNC)));
 
-                    authPacket.SetAttribute(new RadiusAttribute(RadiusAttributeType.NAS_PORT_TYPE, BitConverter.GetBytes((int)NasPortType.ASYNC)));
+                        var receivedPacket = rc.SendAndReceivePacket(authPacket, server.retries).Result;
 
-                    var receivedPacket = rc.SendAndReceivePacket(authPacket, server.retries).Result;
+                        if (receivedPacket != null && receivedPacket.PacketType == RadiusCode.ACCESS_ACCEPT)
+                            state.Stop();
 
-                    if (receivedPacket != null && receivedPacket.PacketType == RadiusCode.ACCESS_ACCEPT)
-                         state.Stop();
-                                    
+                    }catch(Exception){}
+                          
             });
 
             if (res.IsCompleted) 

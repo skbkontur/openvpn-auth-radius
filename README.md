@@ -1,5 +1,6 @@
 Introduction
 ============
+[![Build status](https://img.shields.io/appveyor/ci/chipitsine/openvpn-auth-radius.svg?label=build windows)](https://ci.appveyor.com/project/chipitsine/openvpn-auth-radius) 
 
 if you are familiar with C#, you might want to wrap server side OpenVPN authentication with openvpn-auth-radius
 
@@ -9,7 +10,7 @@ Usage
 add the following line to server.conf:
 
 ```
-auth-user-pass-verify '/usr/local/bin/mono /etc/openvpn/auth.exe' via-env
+auth-user-pass-verify 'mono /etc/openvpn/auth.exe' via-env
 ```
 
 example auth.exe.config:
